@@ -36,12 +36,12 @@ def get_info_pkg(fichero):
 	version="error"
 	orbiscmd_exe = "%s\\tools\\orbis\\orbis-pub-cmd.exe" % (APP_PATH)
 	orbis_info_cmd=[orbiscmd_exe,"img_info",fichero]
-	sp = subprocess.run(orbis_info_cmd, capture_output=True, text=True, shell=True)
+	sp = subprocess.run(orbis_info_cmd, capture_output=True, text=True, shell=False, errors="backslashreplace")
 	for k in sp.stdout.strip().split("\n"):
 		if (k.find("Title ID:")==0): title_id = k[10:]
 		if (k.find("Application Version(APP_VER):")==0): version = k[30:]
 	return title_id,version
-
+	
 # EXTRACT PKG
 def extract_update(patch_pkg, title_id):
 	orbiscmd_exe = "%s\\tools\\orbis\\orbis-pub-cmd.exe" % (APP_PATH)
@@ -55,10 +55,10 @@ def extract_update(patch_pkg, title_id):
 def create_gp4(patch_extracted, game_pkg):
 	gengp4_exe = "%s\\tools\\orbis\\gengp4_patch.exe" % (APP_PATH)
 	gengp4_patch_cmd=[gengp4_exe,patch_extracted]
-	sp = subprocess.run(gengp4_patch_cmd, capture_output=True, text=True, shell=False)
+	sp = subprocess.run(gengp4_patch_cmd, capture_output=True, text=True, shell=False, errors="backslashreplace")
 	orbiscmd_exe = "%s\\tools\\orbis\\orbis-pub-cmd.exe" % (APP_PATH)
 	orbis_patchgp4_cmd=[orbiscmd_exe,"gp4_proj_update","--app_path",game_pkg,patch_extracted+".gp4"]
-	sp = subprocess.run(orbis_patchgp4_cmd, capture_output=True, text=True, shell=False)
+	sp = subprocess.run(orbis_patchgp4_cmd, capture_output=True, text=True, shell=False, errors="backslashreplace")
 
 # CREATE PKG
 def create_pkg(gp4_file, title_id):
